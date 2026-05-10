@@ -83,6 +83,16 @@ local plugins = {
     end,
   },
   {
+    "lewis6991/gitsigns.nvim",
+    opts = {
+      on_attach = function(bufnr)
+        local gs = require("gitsigns")
+        vim.keymap.set("n", "]h", function() gs.nav_hunk("next") end, { buffer = bufnr, desc = "Next git hunk" })
+        vim.keymap.set("n", "[h", function() gs.nav_hunk("prev") end, { buffer = bufnr, desc = "Prev git hunk" })
+      end,
+    },
+  },
+  {
     "karb94/neoscroll.nvim",
     event = "BufWinEnter", -- Load on entering a buffer
     config = function()
