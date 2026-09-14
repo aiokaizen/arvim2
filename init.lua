@@ -32,6 +32,9 @@ dofile(vim.g.base46_cache .. "statusline")
 require "options"
 require "nvchad.autocmds"
 
+-- Fix markdown treesitter injection crash on Neovim 0.12 (see configs/tsmd_fix)
+require "configs.tsmd_fix"
+
 vim.schedule(function()
   require "mappings"
 end)

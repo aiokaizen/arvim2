@@ -1,24 +1,13 @@
--- load defaults i.e lua_lsp
+-- load defaults i.e lua_lsp (also sets capabilities, on_init & on_attach for all
+-- servers via the new vim.lsp.config API — see nvchad.configs.lspconfig.defaults)
 require("nvchad.configs.lspconfig").defaults()
 
-local lspconfig = require "lspconfig"
-
--- EXAMPLE
-local servers = { "html", "cssls", "ruff", "pyright" }
-local nvlsp = require "nvchad.configs.lspconfig"
-
--- lsps with default config
-for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
-    on_attach = nvlsp.on_attach,
-    on_init = nvlsp.on_init,
-    capabilities = nvlsp.capabilities,
-  }
-end
-
--- configuring single server, example: typescript
-lspconfig.ts_ls.setup {
-  on_attach = nvlsp.on_attach,
-  on_init = nvlsp.on_init,
-  capabilities = nvlsp.capabilities,
+-- Enable servers using the Neovim 0.11+ vim.lsp API.
+-- capabilities/on_init/on_attach are already applied globally by defaults().
+vim.lsp.enable {
+  "html",
+  "cssls",
+  "ruff",
+  "pyright",
+  "ts_ls",
 }

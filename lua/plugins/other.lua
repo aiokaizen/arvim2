@@ -15,6 +15,10 @@ local plugins = {
   },
   {
     "nvim-treesitter/nvim-treesitter",
+    -- Pin the classic branch: NvChad v2.5 uses the master-branch API
+    -- (highlight.enable, TSInstallAll). The new `main` branch is an
+    -- incompatible rewrite whose highlight queries never load here.
+    branch = "master",
     opts = {
       ensure_installed = {
         "lua", "vim", "vimdoc", "toml", "yaml",
@@ -31,6 +35,17 @@ local plugins = {
         enable = true,
         multiline_threshold = 1,
         max_lines = 5,
+        -- treesitter-context (latest) crashes on Neovim 0.12 for filetypes with
+        -- nested/injected language trees (e.g. markdown -> markdown_inline).
+        -- Skip those buffers until upstream supports 0.12; keep context for code.
+        on_attach = function(buf)
+          local ft = vim.bo[buf].filetype
+          local skip = { markdown = true, rst = true, text = true, mdx = true }
+          if skip[ft] then
+            return false
+          end
+          return true
+        end,
       })
     end
   },
@@ -117,9 +132,9 @@ local plugins = {
       { "nvim-telescope/telescope.nvim", branch = "0.1.x", dependencies = { "nvim-lua/plenary.nvim" } },
     },
     lazy = false,
-    branch = "regexp", -- This is the regexp branch, use this for the new version
+    -- regexp branch was merged back into main; track main
     config = function()
-      require("venv-selector").setup()
+      require("venv-selector").setup {}
     end,
     keys = {
       { ",v", "<cmd>VenvSelect<cr>" },
